@@ -21,7 +21,7 @@ class MLPModel(object):
         """
         Load the data
         """
-        crimes = CrimesData.objects.all()
+        crimes = CrimesData.objects.all()[:10000]
         df = read_frame(crimes)
 
         return df
@@ -34,28 +34,29 @@ class MLPModel(object):
         # Part 1 - Data Preprocessing
         # Importing the dataset
         dataset = self.load_data()
-        dataset = dataset.drop(labels=['case_number','block', 'iucr', 'id'], axis=1)\
+        dataset = dataset.drop(labels=['case_number','block', 'iucr', 'id','x_coordinate','y_coordinate', 'community_area'], axis=1)
 
         #Transform date to integer
         dataset['date'] = pd.to_datetime(dataset['date'])
         dataset['date']=dataset['date'].map(dt.datetime.toordinal)
 
-        dataset = pd.get_dummies(dataset,columns=['primary_type', 'district'])
+        dataset = pd.get_dummies(dataset,columns=['primary_type'])
 
         dataset = dataset.dropna()
 
         train_dataset = dataset.sample(frac=0.66, random_state= 1)
         test_dataset = dataset.drop(train_dataset.index)
+        print(test_dataset)
 
         #Variables independientes o features
         train_features = train_dataset.copy()
         test_features = test_dataset.copy()
 
         #Variables dependientes o labels
-        train_labels = train_features.pop('date')
-        test_labels = test_features.pop('date')
+        train_labels = pd.get_dummies(train_features.pop('district'),columns=['district'])
+        test_labels = pd.get_dummies(test_features.pop('district'),columns=['district'])
 
-        FEATURES = 60
+        FEATURES = len(train_features.columns)
         N_VALIDATION = int(1e3)
         N_TRAIN = int(1e4)
         BUFFER_SIZE = int(1e4)
@@ -68,11 +69,11 @@ class MLPModel(object):
 
         model = keras.Sequential([
             normalizer,
-            layers.Dense(512,activation='relu', input_shape=(FEATURES,)),
-            layers.Dense(512,activation='relu'),
-            layers.Dense(512,activation='relu'),
-            layers.Dense(512,activation='relu'),
-            layers.Dense(1)
+            layers.Dense(64,activation='relu', input_shape=(FEATURES,)),
+            layers.Dense(64,activation='relu'),
+            layers.Dense(64,activation='relu'),
+            layers.Dense(64,activation='relu'),
+            layers.Dense(len(train_labels.columns))
         ])
         lr_schedule = tf.keras.optimizers.schedules.InverseTimeDecay(
             0.001,
@@ -81,7 +82,7 @@ class MLPModel(object):
             staircase=False)
 
         model.compile(loss='mean_absolute_error',
-                        optimizer=tf.keras.optimizers.Adam(lr_schedule))
+                        optimizer=tf.keras.optimizers.Adam())
         
         print(model.summary())
         history = model.fit(
