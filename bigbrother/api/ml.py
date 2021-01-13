@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 import json
 import logging
 from ..logic_layer.MLModels.mlp import MLPModel
+from ..logic_layer.Commands import *
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,21 @@ def train_mlp(request):
 
         mlm = MLPModel()
         mlm.train()
+
+        return JsonResponse({'success':1, 'message':"Trained Successfully"})
+    except Exception as ex:
+
+        logger.exception("Error")
+
+        return JsonResponse({'success': 0, 'error': _('Ha acurrido un error interno')})
+
+@csrf_exempt
+def predict(request):
+    """ Api endpoint to register user"""
+    try:
+        body = json.loads(request.body.decode('UTF-8'), encoding='UTF-8')
+        command = PredictDistrictCommand(body)
+        command.execute()
 
         return JsonResponse({'success':1, 'message':"Equis"})
     except Exception as ex:

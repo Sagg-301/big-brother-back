@@ -8,6 +8,7 @@ from tensorflow.keras.layers.experimental import preprocessing
 from django_pandas.io import read_frame
 from ...models import CrimesData
 import datetime as dt
+import time
 
 import sys
 np.set_printoptions(threshold=sys.maxsize)
@@ -21,7 +22,7 @@ class MLPModel(object):
         """
         Load the data
         """
-        crimes = CrimesData.objects.all()[:10000]
+        crimes = CrimesData.objects.all()[:500000]
         df = read_frame(crimes)
 
         return df
@@ -46,7 +47,6 @@ class MLPModel(object):
 
         train_dataset = dataset.sample(frac=0.66, random_state= 1)
         test_dataset = dataset.drop(train_dataset.index)
-        print(test_dataset)
 
         #Variables independientes o features
         train_features = train_dataset.copy()
@@ -55,11 +55,13 @@ class MLPModel(object):
         #Variables dependientes o labels
         train_labels = pd.get_dummies(train_features.pop('district'),columns=['district'])
         test_labels = pd.get_dummies(test_features.pop('district'),columns=['district'])
+        cont = 1
+        for col in train_features.columns:
+            print("{}-{}".format(cont, col))
+            cont = cont + 1
 
         FEATURES = len(train_features.columns)
-        N_VALIDATION = int(1e3)
         N_TRAIN = int(1e4)
-        BUFFER_SIZE = int(1e4)
         BATCH_SIZE = 500
         STEPS_PER_EPOCH = N_TRAIN//BATCH_SIZE
 
@@ -69,11 +71,12 @@ class MLPModel(object):
 
         model = keras.Sequential([
             normalizer,
-            layers.Dense(64,activation='relu', input_shape=(FEATURES,)),
-            layers.Dense(64,activation='relu'),
-            layers.Dense(64,activation='relu'),
-            layers.Dense(64,activation='relu'),
-            layers.Dense(len(train_labels.columns))
+            layers.Dense(100,activation='relu', input_shape=(FEATURES,)),
+            layers.Dense(100,activation='relu'),
+            layers.Dense(100,activation='relu'),
+            layers.Dense(100,activation='relu'),
+            layers.Dropout(0.1),
+            layers.Dense(len(train_labels.columns), activation='softmax')
         ])
         lr_schedule = tf.keras.optimizers.schedules.InverseTimeDecay(
             0.001,
@@ -81,10 +84,11 @@ class MLPModel(object):
             decay_rate=1,
             staircase=False)
 
-        model.compile(loss='mean_absolute_error',
+        model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
                         optimizer=tf.keras.optimizers.Adam())
         
         print(model.summary())
+
         history = model.fit(
         train_features, train_labels,
         steps_per_epoch = STEPS_PER_EPOCH,
@@ -94,12 +98,23 @@ class MLPModel(object):
         test_results = model.evaluate(test_features, test_labels, verbose=0)
         print(test_results)
 
+        
+        model.save('models/model')
+
+        result = model.predict(test_features)
+        print(result)
+
         # Making the Confusion Matrix
         # cm = confusion_matrix(y_test, y_pred)
         # print(cm)
 
-    def predict(parameter_list):
+    def predict(self, prediction):
         """
         docstring
         """
-        pass
+        model = tf.keras.models.load_model('models/model')
+        data = pd.DataFrame(prediction, index=[0])
+        print(model.summary())
+        response = model.predict(data)
+
+        print(response)

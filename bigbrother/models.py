@@ -18,7 +18,7 @@ class CrimesData(models.Model):
     block = models.TextField(db_column='Block', blank=True, null=True)  # Field name made lowercase.
     iucr = models.TextField(db_column='IUCR', blank=True, null=True)  # Field name made lowercase.
     primary_type = models.TextField(db_column='Primary Type', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    district = models.FloatField(db_column='District', blank=True, null=True)  # Field name made lowercase.
+    district = models.IntegerField(db_column='District', blank=True, null=True)  # Field name made lowercase.
     community_area = models.FloatField(db_column='Community Area', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     x_coordinate = models.FloatField(db_column='X Coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     y_coordinate = models.FloatField(db_column='Y Coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
