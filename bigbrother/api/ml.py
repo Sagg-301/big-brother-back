@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 import json
 import logging
-from ..logic_layer.MLModels.mlp import MLPModel
+from ..logic_layer.MLModels.lstmrnn import MLPModel
 from ..logic_layer.Commands import *
 
 logger = logging.getLogger(__name__)
