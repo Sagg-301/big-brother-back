@@ -1,7 +1,7 @@
 from .Command import Command
-from ..MLModels.mlp import MLPModel
+from ..MLModels.lstmrnn import MLPModel
 
-class PredictDistrictCommand(Command):
+class PredictLocationCommand(Command):
     """
     docstring
     """

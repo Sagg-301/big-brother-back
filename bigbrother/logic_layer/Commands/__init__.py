@@ -1,1 +1,1 @@
-from .PredictDistrictCommand import PredictDistrictCommand
+from .PredictLocationCommand import PredictLocationCommand

@@ -33,7 +33,7 @@ def predict(request):
     """ Api endpoint to register user"""
     try:
         body = json.loads(request.body.decode('UTF-8'), encoding='UTF-8')
-        command = PredictDistrictCommand(body)
+        command = PredictLocationCommand(body)
         command.execute()
 
         return JsonResponse({'success':1, 'message':"Equis"})
