@@ -1,0 +1,2 @@
+from .NeuralNetwork.PredictLocationCommand import PredictLocationCommand
+from .NeuralNetwork.TrainModelCommand import TrainModelCommand
