@@ -34,9 +34,12 @@ def predict(request):
     try:
         body = json.loads(request.body.decode('UTF-8'), encoding='UTF-8')
         command = PredictLocationCommand(body)
-        command.execute()
+        response = command.execute().tolist()
 
-        return JsonResponse({'success':1, 'message':"Equis"})
+        return JsonResponse({'success':1, 'message':"Predicción realizada con éxito", 'data':{
+            'x_coordinate':response[0],
+            'y_coordinate':response[1],
+        }})
     except Exception as ex:
 
         logger.exception("Error")

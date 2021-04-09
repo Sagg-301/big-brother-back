@@ -1,5 +1,5 @@
-from .Command import Command
-from ..MLModels.lstmrnn import MLPModel
+from ..Command import Command
+from ...MLModels.lstmrnn import MLPModel
 
 class PredictLocationCommand(Command):
     """
@@ -11,4 +11,4 @@ class PredictLocationCommand(Command):
     def execute(self):
         mlp = MLPModel()
 
-        mlp.predict(self.payload)
+        return mlp.predict(self.payload)

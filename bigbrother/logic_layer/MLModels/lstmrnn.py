@@ -114,4 +114,4 @@ class MLPModel(object):
         response[0] = int(response[0] * (1205119 - 0) + 0)
         response[1] = int(response[1] * (1951573 - 0) + 0)
 
-        print(response)
+        return response
