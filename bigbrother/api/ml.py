@@ -20,9 +20,6 @@ class MLApiView(viewsets.ViewSet):
     def train(self, request):
         """ Api endpoint to register user"""
         try:
-            # body = json.loads(request.body.decode('UTF-8'), encoding='UTF-8')
-            # command = RegisterUserCommand(body)
-            # command.execute()
 
             mlm = MLPModel()
             mlm.train()
