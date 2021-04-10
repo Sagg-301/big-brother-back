@@ -1,23 +1,44 @@
-from abc import ABC, abstractclassmethod
+from __future__ import annotations
+from abc import ABC, abstractmethod
+
 
 class DAO(ABC):
-    
-    @abstractclassmethod
-    def add(self, object):
-        pass
-    
-    @abstractclassmethod
-    def get(self, id):
+    """
+    Data Access Object Abstract Class.
+    """
+
+    @abstractmethod
+    def add(self):
+        """ 
+        Adds to the Database
+        """
         pass
 
-    @abstractclassmethod
-    def get_all(self, **kwargs):
+    @abstractmethod
+    def get(self):
+        """
+        Gets alll records from the Database
+        """
         pass
 
-    @abstractclassmethod
-    def update(self, **kargs):
+    @abstractmethod
+    def find(self, id):
+        """
+        Find a single record from the Database by id
+        """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
+    def update(self, data):
+        """
+        Updates a Record on the Database 
+        """
+        pass
+
+    @abstractmethod
     def delete(self, id):
+        """
+
+        Deletes a record on the Database
+        """
         pass

@@ -9,6 +9,15 @@ from django.db import models
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.db.models.base import Model
+
+class BaseModel(models.Model):
+    id = models.AutoField(db_column="id",primary_key=True) # Field name made lowercase
+    created_at = models.DateTimeField(db_column="created_at", auto_now_add=True)
+    updated_at = models.DateTimeField(db_column="updated_at", auto_now=True)
+
+    class Meta:
+        abstract=True # Set this model as Abstract
 
 
 class CrimesData(models.Model):
@@ -27,8 +36,7 @@ class CrimesData(models.Model):
         managed = False
         db_table = 'crimes_data'
 
-class Prediction(models.Model):
-    id = models.TextField(db_column='ID', primary_key=True) # Field name made lowercase.
+class Prediction(BaseModel):
     x_coordinate = models.FloatField(db_column='x_coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     y_coordinate = models.FloatField(db_column='y_coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
 
