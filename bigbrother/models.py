@@ -26,3 +26,11 @@ class CrimesData(models.Model):
     class Meta:
         managed = False
         db_table = 'crimes_data'
+
+class Prediction(models.Model):
+    id = models.TextField(db_column='ID', primary_key=True) # Field name made lowercase.
+    x_coordinate = models.FloatField(db_column='x_coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    y_coordinate = models.FloatField(db_column='y_coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+
+    class Meta:
+        db_table = 'prediction'
