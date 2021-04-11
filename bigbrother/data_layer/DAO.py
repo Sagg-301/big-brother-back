@@ -19,7 +19,11 @@ class DAO(ABC):
         """
         with connection.cursor() as cursor:
             cursor.execute(query, data)
-            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            rows = [
+                dict(zip(columns, row))
+                for row in cursor.fetchall()
+            ]
 
         return rows
 

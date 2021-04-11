@@ -30,3 +30,13 @@ class Crimes(DAO):
                                 
 
         return coordinates
+
+    def stats(self):
+        try:
+            return {
+                "quantity_per_district":self.raw_query(""" SELECT COUNT("ID") as quantity, "District" FROM crimes_data WHERE "District" IS NOT NULL GROUP BY "District" ORDER BY quantity ASC"""),
+                "quantity_per_type":self.raw_query("""SELECT COUNT("ID") as quantity, "Primary Type" FROM crimes_data WHERE "Primary Type" IS NOT NULL GROUP BY "Primary Type" ORDER BY quantity ASC"""),
+                "quantity_per_month":self.raw_query("""SELECT EXTRACT (MONTH FROM "Date") as "month", COUNT("ID") as quantity FROM crimes_data GROUP BY "month" ORDER BY quantity ASC"""),
+            }
+        except Exception as ex:
+            raise ex

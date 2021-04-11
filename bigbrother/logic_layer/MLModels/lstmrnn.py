@@ -116,8 +116,9 @@ class MLPModel(object):
         response = model.predict(data)
 
         response = response[0]
-        response[0] = int(response[0] * (min_max[0] - min_max[1]) + min_max[1])
-        response[1] = int(response[1] * (min_max[2] - min_max[3]) + min_max[3])
+        print(response)
+        response[0] = int(response[0] * (min_max['max_x'] - min_max['min_x']) + min_max['min_x'])
+        response[1] = int(response[1] * (min_max['max_y'] - min_max['min_y']) + min_max['min_y'])
 
         predictionDAO = PredictionDAO()
         predictionDAO.add({'x_coordinate':response[0],'y_coordinate':response[1], 'user_id': prediction['user_id']})
