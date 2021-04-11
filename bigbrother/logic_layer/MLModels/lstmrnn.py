@@ -1,16 +1,13 @@
 # mlp for regression
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from django_pandas.io import read_frame
-from numpy import nan
+from django.db import connection
 
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import LSTM, Dense
-from sklearn.preprocessing import MinMaxScaler
-
-from sklearn.metrics import mean_squared_error
-from ...models import CrimesData
+from ...data_layer.Crimes import Crimes as CrimesDAO
+from ...data_layer.Predictions import Prediction as PredictionDAO
 import tensorflow as tf
 
 import sys
@@ -25,7 +22,7 @@ class MLPModel(object):
         """
         Load the data
         """
-        crimes = CrimesData.objects.all()
+        crimes = CrimesDAO().get()
         df = read_frame(crimes)
 
         return df
@@ -96,12 +93,20 @@ class MLPModel(object):
         print(result)
 
     def predict(self, prediction):
-        """
-        docstring
+        """Predict the location of a crime given the date and the type
+
+        Args:
+            prediction ([type]): [description]
+
+        Returns:
+            [type]: [description]
         """
 
+        #Get the max and min coordinates for conversion purposes
+        min_max = CrimesDAO().get_min_max_coordinates()
+
         model = tf.keras.models.load_model('models/lstmmodel')
-        data = pd.DataFrame(prediction, index=[0])
+        data = pd.DataFrame(prediction['data'], index=[0])
         data.set_index(['date'], inplace=True)
 
         data = np.array(data)
@@ -111,7 +116,12 @@ class MLPModel(object):
         response = model.predict(data)
 
         response = response[0]
-        response[0] = int(response[0] * (1205119 - 0) + 0)
-        response[1] = int(response[1] * (1951573 - 0) + 0)
+        print(response)
+        response[0] = int(response[0] * (min_max['max_x'] - min_max['min_x']) + min_max['min_x'])
+        response[1] = int(response[1] * (min_max['max_y'] - min_max['min_y']) + min_max['min_y'])
+
+        predictionDAO = PredictionDAO()
+        predictionDAO.add({'x_coordinate':response[0],'y_coordinate':response[1], 'user_id': prediction['user_id']})
 
         return response
+       
