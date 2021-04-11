@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User as UserModel
 
 # Create your models here.
 # This is an auto-generated Django model module.
@@ -21,24 +22,25 @@ class BaseModel(models.Model):
 
 
 class CrimesData(models.Model):
-    id = models.TextField(db_column='ID', primary_key=True) # Field name made lowercase.
-    case_number = models.TextField(db_column='Case Number', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    date = models.TextField(db_column='Date', blank=True, null=True)  # Field name made lowercase.
-    block = models.TextField(db_column='Block', blank=True, null=True)  # Field name made lowercase.
-    iucr = models.TextField(db_column='IUCR', blank=True, null=True)  # Field name made lowercase.
-    primary_type = models.TextField(db_column='Primary Type', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    district = models.IntegerField(db_column='District', blank=True, null=True)  # Field name made lowercase.
-    community_area = models.FloatField(db_column='Community Area', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    x_coordinate = models.FloatField(db_column='X Coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    y_coordinate = models.FloatField(db_column='Y Coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    id = models.TextField(db_column='ID', primary_key=True)
+    case_number = models.TextField(db_column='Case Number', blank=True, null=True) 
+    date = models.TextField(db_column='Date', blank=True, null=True) 
+    block = models.TextField(db_column='Block', blank=True, null=True) 
+    iucr = models.TextField(db_column='IUCR', blank=True, null=True) 
+    primary_type = models.TextField(db_column='Primary Type', blank=True, null=True) 
+    district = models.IntegerField(db_column='District', blank=True, null=True) 
+    community_area = models.FloatField(db_column='Community Area', blank=True, null=True) 
+    x_coordinate = models.FloatField(db_column='X Coordinate', blank=True, null=True) 
+    y_coordinate = models.FloatField(db_column='Y Coordinate', blank=True, null=True) 
 
     class Meta:
         managed = False
         db_table = 'crimes_data'
 
 class Prediction(BaseModel):
-    x_coordinate = models.FloatField(db_column='x_coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    y_coordinate = models.FloatField(db_column='y_coordinate', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    x_coordinate = models.FloatField(db_column='x_coordinate', blank=True, null=True) 
+    y_coordinate = models.FloatField(db_column='y_coordinate', blank=True, null=True)
+    user = models.ForeignKey(UserModel,null= True, on_delete=models.SET_NULL)
 
     class Meta:
-        db_table = 'prediction'
+        db_table = 'location_prediction'

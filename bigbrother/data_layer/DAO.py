@@ -1,11 +1,27 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from django.db import connection
 
 
 class DAO(ABC):
     """
     Data Access Object Abstract Class.
     """
+    def raw_query(self, query:str = "", data:list = []):
+        """Execute a raw query
+
+        Args:
+            query (str, optional): Query to execute. Defaults to "".
+            data (list, optional): Variables. Defaults to [].
+
+        Returns:
+            [type]: [description]
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(query, data)
+            rows = cursor.fetchall()
+
+        return rows
 
     @abstractmethod
     def add(self):
