@@ -57,7 +57,7 @@ class UserApiView(viewsets.ViewSet):
     
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated, IsAdminUser],
             url_path='find', url_name='find')
-    def get(self, request, pk=None):
+    def find(self, request, pk=None):
         """ Api endpoint to register user"""
         try:
 
