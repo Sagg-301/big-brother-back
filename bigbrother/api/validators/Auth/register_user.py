@@ -1,4 +1,3 @@
-
 from ....common.Exceptions.ValidationException import ValidationException
 from django.contrib.auth.models import User as UserModel
 
@@ -31,8 +30,8 @@ class RegisterUserValidator():
             raise ValidationException("El campo apellido es obligatorio")
 
 
-        if UserModel.objects.get(username = self.data['username']):
+        if UserModel.objects.filter(username=self.data['username']).first():
             raise ValidationException("Ya existe ese nombre de usuario")
 
-        if UserModel.objects.get(username = self.data['email']):
+        if UserModel.objects.filter(email=self.data['email']).first():
             raise ValidationException("Ya existe un usuario con ese correo electrónico")
