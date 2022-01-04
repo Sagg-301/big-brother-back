@@ -15,8 +15,8 @@ router.register(r'api/prediction', PredictionApiView, basename='prediction')
 router.register(r'api/crimes', CrimesApiView, basename='crimes')
 
 urlpatterns = [
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 
