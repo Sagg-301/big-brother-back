@@ -3,12 +3,14 @@ import numpy as np
 import pandas as pd
 from django_pandas.io import read_frame
 from django.db import connection
+from pyproj.transformer import Transformer
 
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 from ...data_layer.Crimes import Crimes as CrimesDAO
 from ...data_layer.Predictions import Prediction as PredictionDAO
 import tensorflow as tf
+
 
 import sys
 # np.set_printoptions(threshold=sys.maxsize)
@@ -87,7 +89,7 @@ class MLPModel(object):
         validation_split=0.1,
         verbose=1, epochs=100, shuffle=False)
 
-        model.save('models/lstmmodel')
+        # model.save('models/lstmmodel')
 
         result = model.predict(test_features)
         print(result)
@@ -103,6 +105,9 @@ class MLPModel(object):
         """
 
         #Get the max and min coordinates for conversion purposes
+
+        #Transformar de NAD83 a coordenadas universales
+        transformer = Transformer.from_crs( "epsg:3602","epsg:4326",always_xy=False)
         min_max = CrimesDAO().get_min_max_coordinates()
 
         model = tf.keras.models.load_model('models/lstmmodel')
@@ -123,5 +128,7 @@ class MLPModel(object):
         predictionDAO = PredictionDAO()
         predictionDAO.add({'x_coordinate':response[0],'y_coordinate':response[1], 'user_id': prediction['user_id']})
 
+        #Transformar a coordenadas lat lon
+        response[0], response[1] = transformer.transform(response[0] / 3.28, response[1] / 3.28)
         return response
        
