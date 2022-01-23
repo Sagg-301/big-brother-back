@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from django.utils.translation import gettext as _
 import json
 import logging
-from ..logic_layer.MLModels.lstmrnn import MLPModel
+from ..logic_layer.MLModels.random_forest import MLPModel
 from ..logic_layer.Commands import *
 
 logger = logging.getLogger(__name__)

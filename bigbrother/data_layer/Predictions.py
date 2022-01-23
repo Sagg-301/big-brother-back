@@ -1,5 +1,6 @@
 from .DAO import DAO
 from ..models import Prediction as PredictionModel
+from pyproj import Transformer 
 
 class Prediction(DAO):
     
@@ -20,8 +21,13 @@ class Prediction(DAO):
             raise ex
     
     def get(self):
-        predictions = PredictionModel.objects.all()
 
+        #Transformar de NAD83 a coordenadas universales
+        transformer = Transformer.from_crs( "epsg:3602","epsg:4326",always_xy=False)
+        predictions = PredictionModel.objects.all()
+        print(predictions)
+        for pr in predictions:
+            pr.x_coordinate, pr.y_coordinate = transformer.transform(pr.x_coordinate / 3.28, pr.y_coordinate / 3.28)
         return predictions
 
     def find(self, id):
