@@ -31,8 +31,8 @@ class RegisterUserValidator():
             raise ValidationException("El campo apellido es obligatorio")
 
 
-        if UserModel.objects.get(username = self.data['username']):
+        if UserModel.objects.filter(username = self.data['username']):
             raise ValidationException("Ya existe ese nombre de usuario")
 
-        if UserModel.objects.get(username = self.data['email']):
+        if UserModel.objects.filter(username = self.data['email']):
             raise ValidationException("Ya existe un usuario con ese correo electrónico")

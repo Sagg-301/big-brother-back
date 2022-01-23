@@ -2,7 +2,8 @@
 import numpy as np
 import pandas as pd
 from django_pandas.io import read_frame
-from django.db import connection
+
+from sklearn import metrics
 from pyproj.transformer import Transformer
 
 from tensorflow.keras import Sequential
@@ -27,7 +28,7 @@ class MLPModel(object):
         crimes = CrimesDAO().get()
         df = read_frame(crimes)
 
-        return df
+        return df[:100000]
 
     def train(self):
         """
@@ -91,8 +92,13 @@ class MLPModel(object):
 
         # model.save('models/lstmmodel')
 
-        result = model.predict(test_features)
-        print(result)
+        prediction = model.predict(test_features)
+        print(prediction)
+
+        print('Mean Absolute Error:', metrics.mean_absolute_error(test_labels, prediction))
+        print('Mean Squared Error:', metrics.mean_squared_error(test_labels, prediction))
+        print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(test_labels, prediction)))
+
 
     def predict(self, prediction):
         """Predict the location of a crime given the date and the type

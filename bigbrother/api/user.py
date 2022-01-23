@@ -28,7 +28,7 @@ class UserApiView(viewsets.ViewSet):
             command = AddUserCommand(body)
             command.execute()
 
-            return Response({'success':1, 'message':"Usuario Agregado con éxito"})
+            return Response({'success':1, 'message':"Sesión cerrada con éxito"})
 
         except ValidationException as ex:
             return Response({'success': 0, 'error': ex.message})

@@ -8,5 +8,5 @@ class TrainModelCommand(Command):
 
     def execute(self):
         mlp = MLPModel()
-
+        print("hi")
         mlp.train()
