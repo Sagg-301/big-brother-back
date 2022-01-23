@@ -28,15 +28,15 @@ class UserApiView(viewsets.ViewSet):
             command = AddUserCommand(body)
             command.execute()
 
-            return Response({'success':1, 'message':"Usuario Agregado con éxito"})
+            return Response({'message':"Usuario Agregado con éxito"}, 201)
 
         except ValidationException as ex:
-            return Response({'success': 0, 'error': ex.message})
+            return Response({'error': ex.message}, 400)
         except Exception as ex:
 
             logger.exception("Error")
 
-            return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
+            return Response({'error': _('Ha acurrido un error interno')},500)
 
 
     @action(methods=['get'], detail=False, permission_classes=[IsAuthenticated, IsAdminUser],
