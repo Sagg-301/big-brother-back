@@ -28,7 +28,31 @@ class UserApiView(viewsets.ViewSet):
             command = AddUserCommand(body)
             command.execute()
 
-            return Response({'success':1, 'message':"Sesión cerrada con éxito"})
+            return Response({'success':1, 'message':"Usuario creado con éxito"})
+
+        except ValidationException as ex:
+            return Response({'success': 0, 'error': ex.message})
+        except Exception as ex:
+
+            logger.exception("Error")
+
+            return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
+
+    @action(methods=['put'], detail=True, permission_classes=[IsAuthenticated, IsAdminUser],
+            url_path='update', url_name='update')
+    def edit(self, request, pk=None):
+        """ Api endpoint to register user"""
+        try:
+            body = json.loads(request.body.decode('UTF-8'), encoding='UTF-8')
+            body['id'] = pk
+
+            # validator = RegisterUserValidator(body)
+            # validator.validate()
+
+            command = UpdateUserCommand(body)
+            command.execute()
+
+            return Response({'success':1, 'message':"Usuario actualizado con éxito"})
 
         except ValidationException as ex:
             return Response({'success': 0, 'error': ex.message})
@@ -65,6 +89,22 @@ class UserApiView(viewsets.ViewSet):
             response = command.execute()
 
             return Response({'success':1, 'data':response})
+        except Exception as ex:
+
+            logger.exception("Error")
+
+            return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
+
+    @action(methods=['put'], detail=True, permission_classes=[IsAuthenticated, IsAdminUser],
+            url_path='deactivate', url_name='deactivate')
+    def delete(self, request, pk=None):
+        """ Api endpoint to register user"""
+        try:
+
+            command = DeleteUserCommand(pk)
+            response = command.execute()
+
+            return Response({'success':1, 'data':" Usuario desactivado con éxito"})
         except Exception as ex:
 
             logger.exception("Error")

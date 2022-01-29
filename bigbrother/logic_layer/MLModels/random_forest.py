@@ -73,27 +73,11 @@ class MLPModel(object):
         joblib.dump(model, 'models/rfmodel')
 
     def predict(self, prediction):
-        """Predict the location of a crime given the date and the type
-
-        Args:
-            prediction ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-
-        #Get the max and min coordinates for conversion purposes
-
-        #Transformar de NAD83 a coordenadas universales
-        transformer = Transformer.from_crs( "epsg:3602","epsg:4326",always_xy=False)
-        min_max = CrimesDAO().get_min_max_coordinates()
-
+        #Carga el modelo de prediccion
         model = joblib.load('models/rfmodel')
         data = pd.DataFrame(prediction['data'], index=[0])
         data.set_index(['date'], inplace=True)
         data = np.array(data)
-
-        print(data.shape)
 
         response = model.predict(data)
 
@@ -104,5 +88,6 @@ class MLPModel(object):
         predictionDAO.add({'x_coordinate':response[0],'y_coordinate':response[1], 'user_id': prediction['user_id']})
 
         #Transformar a coordenadas lat lon
+        transformer = Transformer.from_crs( "epsg:3602","epsg:4326",always_xy=False)
         response[0], response[1] = transformer.transform(response[0] / 3.28, response[1] / 3.28)
         return response
