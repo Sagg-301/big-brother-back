@@ -4,6 +4,8 @@ from .NeuralNetwork.TrainModelCommand import TrainModelCommand
 from .User.AddUserCommantd import AddUserCommand
 from .User.GetUsersCommand import GetUsersCommand
 from .User.FindUserCommand import FindUserCommand
+from .User.UpdateUserCommand import UpdateUserCommand
+from .User.DeleteUserCommand import DeleteUserCommand
 
 from .Prediction.GetPredictionsCommand import GetPredictionsCommand
 

@@ -21,7 +21,7 @@ class User(DAO):
     
     def get(self):
         try:
-            users = UserModel.objects.all().filter(is_superuser = False)
+            users = UserModel.objects.all().filter(is_superuser = False, is_active= True)
 
             return users
         except Exception as ex:
@@ -45,11 +45,23 @@ class User(DAO):
             user.last_name = data['last_name']
             user.username = data['username']
             user.email = data['email']
-            # user.password = data['password']
+            if data['password']:
+                user.password = data['password']
+
+            user.save()
 
             return user.id
         except Exception as ex:
             raise ex
     
     def delete(self, id):
-        pass
+        try:
+            user = UserModel.objects.get(pk=id)
+
+            user.is_active = False
+
+            user.save()
+
+            return user.id
+        except Exception as ex:
+            raise ex
