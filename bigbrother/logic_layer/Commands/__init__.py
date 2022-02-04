@@ -10,3 +10,4 @@ from .User.DeleteUserCommand import DeleteUserCommand
 from .Prediction.GetPredictionsCommand import GetPredictionsCommand
 
 from .Crimes.CrimesStatsCommand import CrimesStatCommand
+from .Crimes.AddCrimeCommand import AddCrimeCommand

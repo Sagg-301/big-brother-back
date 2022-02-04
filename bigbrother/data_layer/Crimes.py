@@ -7,7 +7,20 @@ class Crimes(DAO):
         pass
     
     def add(self, data):
-        pass
+        try:
+            crime = CrimesData()
+            crime.id = data['id']
+            crime.district = data['district']
+            crime.date = data['date']
+            crime.primary_type = data['primary_type']
+            crime.x_coordinate = data['x_coordinate']
+            crime.y_coordinate = data['y_coordinate']
+
+            crime.save()
+
+            return crime
+        except Exception as ex:
+            raise ex
     
     def get(self):
         crimes = CrimesData.objects.all()

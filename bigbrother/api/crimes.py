@@ -27,3 +27,20 @@ class CrimesApiView(viewsets.ViewSet):
             logger.exception("Error")
 
             return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
+
+    @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated],
+            url_path='add', url_name='add')
+    def add(self, request):
+        """ Api endpoint to register user"""
+        try:
+            body = json.loads(request.body.decode('UTF-8'), encoding='UTF-8')
+
+            command = AddCrimeCommand(body)
+            response = command.execute()
+
+            return Response({'success':1, 'message':"Crímen agregado con éxito"})
+        except Exception as ex:
+
+            logger.exception("Error")
+
+            return Response({'success': 0, 'error': _('Ha acurrido un error interno')})

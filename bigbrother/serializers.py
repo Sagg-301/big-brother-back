@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'last_login']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'last_login', 'is_active']
 
 class PredictionSerializer(serializers.ModelSerializer):
 
