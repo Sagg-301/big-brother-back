@@ -96,7 +96,7 @@ class UserApiView(viewsets.ViewSet):
             return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
 
     @action(methods=['put'], detail=True, permission_classes=[IsAuthenticated, IsAdminUser],
-            url_path='deactivate', url_name='deactivate')
+            url_path='activate', url_name='activate')
     def delete(self, request, pk=None):
         """ Api endpoint to register user"""
         try:
@@ -104,7 +104,7 @@ class UserApiView(viewsets.ViewSet):
             command = DeleteUserCommand(pk)
             response = command.execute()
 
-            return Response({'success':1, 'data':" Usuario desactivado con éxito"})
+            return Response({'success':1, 'data': "Usuario activado con éxito" if response else "Usuario desactivado con éxito"})
         except Exception as ex:
 
             logger.exception("Error")

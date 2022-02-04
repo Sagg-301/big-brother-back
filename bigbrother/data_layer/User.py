@@ -21,7 +21,7 @@ class User(DAO):
     
     def get(self):
         try:
-            users = UserModel.objects.all().filter(is_superuser = False, is_active= True)
+            users = UserModel.objects.all().filter(is_superuser = False)
 
             return users
         except Exception as ex:
@@ -58,10 +58,10 @@ class User(DAO):
         try:
             user = UserModel.objects.get(pk=id)
 
-            user.is_active = False
+            user.is_active = not user.is_active
 
             user.save()
 
-            return user.id
+            return user.is_active
         except Exception as ex:
             raise ex
