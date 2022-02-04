@@ -28,7 +28,7 @@ class MLApiView(viewsets.ViewSet):
 
             logger.exception("Error")
 
-            return JsonResponse({'success': 0, 'error': _('Ha acurrido un error interno')})
+            return JsonResponse({'success': 0, 'error': _('There is an error at retrain IA')},500)
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated],
             url_path='predict', url_name='predict')
