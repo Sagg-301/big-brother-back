@@ -44,8 +44,9 @@ class User(DAO):
             user.first_name = data['first_name']
             user.last_name = data['last_name']
             user.username = data['username']
-            user.email = data['email']
-            if data['password']:
+            if 'email' in data:
+                user.email = data['email']
+            if 'password' in data:
                 user.password = data['password']
 
             user.save()

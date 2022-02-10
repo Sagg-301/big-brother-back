@@ -44,7 +44,7 @@ class CrimesApiView(viewsets.ViewSet):
 
             logger.exception("Error")
 
-            return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
+            return Response({'success': 0, 'error': _('Ha acurrido un error interno')}, 500)
 
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated],
             url_path='add', url_name='add')
@@ -61,4 +61,4 @@ class CrimesApiView(viewsets.ViewSet):
 
             logger.exception("Error")
 
-            return Response({'success': 0, 'error': _('Ha acurrido un error interno')})
+            return Response({'success': 0, 'error':'Ha acurrido un error interno'}, 500)
