@@ -33,19 +33,13 @@ class CrimesApiView(viewsets.ViewSet):
     def get(self, request):
         """ Api endpoint to register user"""
         try:
-            command = CrimesGetCommand()
+            command = CrimesGetCommand({
+                "per_page": request.GET['per_page'] if request.GET['per_page'] else 100,
+                "page_number": request.GET['page_number']
+            })
             response = command.execute()
-            pages = Paginator(response, request.GET['per_page'] if request.GET['per_page'] else 100)
-            page = pages.page(request.GET['page_number'])
 
-            return Response({'success':1, 'data':{
-                'total_objects':pages.count,
-                'pages': pages.num_pages,
-                'crimes':page.object_list,
-                'has_next': page.has_next(),
-                'has_previous': page.has_previous(),
-                'next_page': page.next_page_number()
-            }})
+            return Response({'success':1, 'data': response})
         except Exception as ex:
 
             logger.exception("Error")
