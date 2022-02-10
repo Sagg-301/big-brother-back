@@ -40,8 +40,8 @@ class MLPModel(object):
 
         #Cambiar fecha a timestamp para hacerlo un entero continuo
         dataset = pd.get_dummies(dataset, columns=['primary_type'])
-        dataset['date'] = pd.to_datetime(dataset["date"])
-        dataset.set_index(['date'], inplace=True)
+        dataset['date'] = pd.to_datetime(dataset["date"]).values.astype(int)/10**9
+        # dataset.set_index(['date'], inplace=True)
 
         #Descartar filas con datos vacios
         dataset = dataset.dropna()
@@ -59,7 +59,7 @@ class MLPModel(object):
 
         train_features, test_features, train_labels, test_labels = np.array(train_features), np.array(test_features), np.array(train_labels), np.array(test_labels)
 
-        model = RandomForestRegressor(n_estimators=1000, random_state=42, verbose=1)
+        model = RandomForestRegressor(n_estimators=1000, random_state=42, verbose=1, n_jobs=4)
         model.fit(train_features, train_labels)
        
         prediction = model.predict(test_features)
@@ -76,7 +76,9 @@ class MLPModel(object):
         #Carga el modelo de prediccion
         model = joblib.load('models/rfmodel')
         data = pd.DataFrame(prediction['data'], index=[0])
-        data.set_index(['date'], inplace=True)
+        data['date'] = pd.to_datetime(data["date"]).values.astype(int)/ 10**9
+        print(data)
+        # data.set_index(['date'], inplace=True)
         data = np.array(data)
 
         response = model.predict(data)
