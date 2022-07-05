@@ -1,5 +1,5 @@
 from ..Command import Command
-from ...MLModels.lstmrnn import MLPModel
+from ...MLModels.mlp import MLPModel
 
 class TrainModelCommand(Command):
     """
